@@ -82,3 +82,29 @@ However, FedAvg inherently sidesteps this issue. [cite_start]Because all clients
 * **CIFAR-10 Image Classification:** Even on more complex image data, FedAvg achieved a target test accuracy of 85% in only 2,000 communication rounds, whereas standard SGD required drastically more updates to reach the same threshold.
 
 **Conclusion:** The experiments decisively prove that federated learning is practical. By allowing devices to perform more local computation ($E > 1$, smaller $B$), FedAvg reduces the required communication rounds by 10-100x, enabling deep networks to be trained directly from decentralized, privacy-sensitive data.
+
+## 6. Empirical Results & Key Takeaways
+
+The authors conducted an extensive empirical evaluation to test FedAvg across five model architectures and four datasets (MNIST, a Shakespeare text corpus, CIFAR-10, and a large-scale social network dataset). The goal was to measure how effectively local computation could replace network communication.
+
+### 1. The Power of Increased Local Computation
+The experiments proved that adding computation per client (by increasing local epochs $E$ and decreasing local batch size $B$) drastically reduces the number of communication rounds required to reach target accuracies. 
+* **MNIST (Image Classification):** For a Convolutional Neural Network (CNN) on perfectly distributed (IID) data, FedAvg reached 99% accuracy using **35x fewer communication rounds** than the FedSGD baseline.
+* **Shakespeare (Language Modeling):** On this next-character prediction task, FedAvg achieved a massive **95x speedup** in communication rounds compared to the baseline. 
+
+### 2. Robustness to Non-IID and Unbalanced Data
+The defining characteristic of mobile data is that it is messy—highly unbalanced and not universally representative (Non-IID).
+* **Pathological MNIST:** The authors purposely broke the MNIST dataset, assigning clients examples of only two distinct digits. Remarkably, FedAvg still converged, proving its resilience to extreme Non-IID distributions.
+* **Natural Unbalance (Shakespeare):** The Shakespeare dataset was partitioned by speaking role, meaning some clients had massive datasets (lead roles) and some had very few (background characters). FedAvg actually performed *better* on this natural, unbalanced distribution than on perfectly balanced data, likely because the clients with larger local datasets benefited immensely from the increased local training ($E$).
+
+### 3. The Danger of Over-Optimization
+While doing more local training helps, the authors noted a limitation. If the number of local epochs ($E$) is set too high, the local models can over-optimize on their specific user data. When these over-fitted models are sent back to the server, the aggregated global model can actually plateau or diverge. This suggests that in later stages of training, it is necessary to decay the amount of local computation per round.
+
+### Visualizing the Speedup
+The figure below demonstrates how FedAvg (dashed lines representing multiple local epochs) reaches high test accuracy in a fraction of the communication rounds compared to the baseline FedSGD (solid blue line representing $E=1$, $B=\infty$).
+
+![Test Accuracy vs Communication Rounds](fig2.png)
+
+
+## 7. Conclusion
+This paper established the foundation of Federated Learning. By utilizing the FederatedAveraging algorithm, deep networks can be trained directly on decentralized, privacy-sensitive data. The approach successfully shifts the bottleneck from expensive network communication to essentially free on-device computation, making mobile-based machine learning highly practical.
