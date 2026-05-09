@@ -75,7 +75,7 @@ However, FedAvg inherently sidesteps this issue. [cite_start]Because all clients
 
 ## 6. Key Results & Empirical Evaluation
 
-[cite_start]The authors conducted an extensive empirical evaluation across different model architectures and datasets to test FedAvg's robustness, specifically against unbalanced and non-IID data[cite: 184, 185, 193].
+The authors conducted an extensive empirical evaluation across different model architectures and datasets to test FedAvg's robustness, specifically against unbalanced and non-IID data.
 
 * **MNIST Digit Recognition (CNN & 2NN):** FedAvg dramatically reduced the required communication rounds. For the IID partition, it required up to 35x fewer rounds for the CNN and 46x fewer for the 2NN compared to the FedSGD baseline. Impressively, it also converged successfully on pathologically partitioned non-IID data (where a client only had examples of two digits).
 * **Shakespeare Language Modeling (LSTM):** This dataset acted as a highly realistic proxy for unbalanced, non-IID mobile typing data. FedAvg performed exceptionally well here, achieving a 95x speedup in communication rounds compared to the baseline.
