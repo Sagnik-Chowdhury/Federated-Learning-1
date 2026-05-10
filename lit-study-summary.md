@@ -46,7 +46,7 @@ This is achieved by:
 To solve the federated optimization problem, the authors start by adapting Stochastic Gradient Descent (SGD) to the decentralized setting. 
 
 ### The Baseline: FederatedSGD (FedSGD)
-A naive approach is to use large-batch synchronous SGD. In each communication round, the server selects a $C$-fraction of clients[cite: 129]. Each selected client $k$ computes the average gradient on its local data at the current global model $w_t$:
+A naive approach is to use large-batch synchronous SGD. In each communication round, the server selects a $C$-fraction of clients. Each selected client $k$ computes the average gradient on its local data at the current global model $w_t$:
 $$g_k = \nabla F_k(w_t)$$
 The central server then aggregates these local gradients and applies the update:
 $$w_{t+1} \leftarrow w_t - \eta \sum_{k=1}^K \frac{n_k}{n} g_k$$
@@ -55,7 +55,7 @@ While computationally efficient, FedSGD requires an impractical number of commun
 ### The Innovation: FederatedAveraging (FedAvg)
 To reduce communication costs, the authors propose shifting the computational load to the clients. Instead of taking a single gradient step and communicating immediately, each client iterates the local update multiple times before the averaging step:
 $$w^k \leftarrow w^k - \eta \nabla F_k(w^k)$$
-The server then takes a weighted average of these resulting locally trained models[cite: 133]. [cite_start]The amount of local computation is controlled by three hyperparameters:
+The server then takes a weighted average of these resulting locally trained models. The amount of local computation is controlled by three hyperparameters:
 * **$C$**: The fraction of clients selected per round.
 * **$E$**: The number of local training epochs (passes over the local dataset).
 * **$B$**: The local minibatch size used for client updates.
@@ -68,7 +68,7 @@ Below is the formal algorithm for FederatedAveraging, demonstrating the server e
 ### The Initialization Phenomenon
 Averaging models in parameter space for non-convex objectives (like deep neural networks) can normally produce arbitrarily bad models if they are trained from different random initializations. 
 
-However, FedAvg inherently sidesteps this issue. [cite_start]Because all clients begin their local training epochs from the *exact same shared global model* ($w_t$) sent by the server, naive parameter averaging works surprisingly well and achieves significant reductions in loss.
+However, FedAvg inherently sidesteps this issue. Because all clients begin their local training epochs from the *exact same shared global model* ($w_t$) sent by the server, naive parameter averaging works surprisingly well and achieves significant reductions in loss.
 
 ![Model Averaging Behavior](fig1.png)
 
