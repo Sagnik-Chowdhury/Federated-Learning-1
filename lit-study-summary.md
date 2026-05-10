@@ -28,10 +28,10 @@ To frame this mathematically, the algorithm assumes any standard finite-sum obje
 $$\boldsymbol{f(w) = \frac{1}{n} \sum_{i=1}^n f_i(w)}$$
 
 In a federated setting with $K$ clients, the data is partitioned. If client $k$ holds $n_k$ data points, the local objective for that specific client is $F_k(w)$:
-$$F_k(w) = \frac{1}{n_k} \sum_{i \in \mathcal{P}_k} f_i(w)$$
+$$\boldsymbol{F_k(w) = \frac{1}{n_k} \sum_{i \in \mathcal{P}_k} f_i(w)}$$
 
 This allows us to rewrite the global objective as a weighted average of the local client objectives:
-$$f(w) = \sum_{k=1}^K \frac{n_k}{n} F_k(w)$$
+$$\boldsymbol{f(w) = \sum_{k=1}^K \frac{n_k}{n} F_k(w)}$$
 
 If the data were uniformly distributed (IID), the expected value of any local $F_k(w)$ would equal the global $f(w)$. However, in this non-IID environment, $F_k(w)$ could be a very poor approximation of $f(w)$, making the optimization highly complex.
 
@@ -48,14 +48,17 @@ To solve the federated optimization problem, the authors start by adapting Stoch
 
 ### The Baseline: FederatedSGD (FedSGD)
 A naive approach is to use large-batch synchronous SGD. In each communication round, the server selects a $C$-fraction of clients. Each selected client $k$ computes the average gradient on its local data at the current global model $w_t$:
-$$g_k = \nabla F_k(w_t)$$
+
+$$\boldsymbol{g_k = \nabla F_k(w_t)}$$
 The central server then aggregates these local gradients and applies the update:
-$$w_{t+1} \leftarrow w_t - \eta \sum_{k=1}^K \frac{n_k}{n} g_k$$
+
+$$\boldsymbol{w_{t+1} \leftarrow w_t - \eta \sum_{k=1}^K \frac{n_k}{n} g_k}$$
 While computationally efficient, FedSGD requires an impractical number of communication rounds to achieve convergence in a mobile network environment.
 
 ### The Innovation: FederatedAveraging (FedAvg)
 To reduce communication costs, the authors propose shifting the computational load to the clients. Instead of taking a single gradient step and communicating immediately, each client iterates the local update multiple times before the averaging step:
-$$w^k \leftarrow w^k - \eta \nabla F_k(w^k)$$
+
+$$\boldsymbol{w^k \leftarrow w^k - \eta \nabla F_k(w^k)}$$
 The server then takes a weighted average of these resulting locally trained models. The amount of local computation is controlled by three hyperparameters:
 * **$C$**: The fraction of clients selected per round.
 * **$E$**: The number of local training epochs (passes over the local dataset).
