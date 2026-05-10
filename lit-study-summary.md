@@ -24,7 +24,7 @@ Federated optimization differs drastically from traditional distributed optimiza
 4. **Limited Communication:** Mobile devices operate on slow, expensive, or intermittent connections.
 
 To frame this mathematically, the algorithm assumes any standard finite-sum objective (like minimizing the loss of a prediction). If $n$ is the total number of data points across all devices, the global objective is:
-\\$$f(w) = \frac{1}{n} \sum_{i=1}^n f_i(w)$$
+$$f(w) = \frac{1}{n} \sum_{i=1}^n f_i(w)$$
 
 In a federated setting with $K$ clients, the data is partitioned. If client $k$ holds $n_k$ data points, the local objective for that specific client is $F_k(w)$:
 $$F_k(w) = \frac{1}{n_k} \sum_{i \in \mathcal{P}_k} f_i(w)$$
