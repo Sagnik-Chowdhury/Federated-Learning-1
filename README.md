@@ -3,7 +3,7 @@
 **Authors:** Sourit Mitra & Sagnik Chowdhury  
 
 ## Project Overview
-This repository contains our collaborative literature study and technical summary of the seminal 2017 paper on decentralized machine learning architectures. This review was conducted as part of our project work at Algolabs. 
+This repository contains our collaborative literature study and technical summary of the seminal paper on decentralized machine learning architectures. This review was conducted as part of our project work at Algolabs. 
 
 ## Source Material
 * **Paper Title:** [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629)
