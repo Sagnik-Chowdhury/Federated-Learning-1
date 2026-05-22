@@ -15,11 +15,11 @@ Our complete, synthesized understanding of the paper's core concepts, challenges
 
 ---
 
-## Part 2: Individual Research & Vulnerability Experiments
+## Individual Research & Vulnerability Experiments
 
 Following our collaborative literature review, we branched into practical experiments to stress-test the framework's privacy guarantees. 
 
-### Sourit's Experiment: Model Inversion across Data Modalities
+###  Model Inversion across Data Modalities
 This experiment demonstrates a major vulnerability in standard Federated Learning: because shared model weights act as a mathematical memory of the client data, an adversary can reverse-engineer those weights to reconstruct properties of the private training set. 
 
 To test how **data modality** impacts privacy, we executed this attack against two distinct data structures:
@@ -38,28 +38,28 @@ The implementation is split into two sequential Jupyter Notebooks:
 
 ---
 
-## Part 3: Robust Aggregation & Differential Privacy (DP) Defenses
+##  Robust Aggregation & Differential Privacy (DP) Defenses
 
 Following the successful reconstruction attacks, we shifted focus to implementing and stress-testing industry-standard defense mechanisms, evaluating how our two data modalities responded to advanced privacy filters.
 
-### 1. Task 2: Trimmed Mean (Quantile) Aggregation
+### 1. Trimmed Mean (Quantile) Aggregation
 Standard Federated Averaging is highly vulnerable to data poisoning from malicious or skewed clients. To mitigate this, we implemented a Trimmed Mean aggregation strategy at the server level.
 * **Mechanism:** The server sorts all client parameter updates and discards the extreme outliers (the top 5% and bottom 5% of updates). The remaining 90% is averaged to form a safe, robust global model.
 * **[Trimmed Mean Aggregation](Fed_Trimmed_Mean_Aggregation.ipynb)**
 
-### 2. Task 3: Gradient Clipping & DP-SGD
+### 2. Gradient Clipping & DP-SGD
 As an alternative to quantile filtering, we implemented a strict mathematical constraint on client updates, forming a standard Differential Privacy pipeline.
 * **Mechanism:** The central server calculates the magnitude (L2 norm) of each client's proposed update. If the update exceeds a rigid threshold, it is mathematically scaled down. 
 * **[Gradient Clipping](Fed_Gradient_Clipping.ipynb)**
 
-### 3. Task 4: Mitigating Client Drift with FedProx
+### 3. Mitigating Client Drift with FedProx
 To address highly heterogeneous (non-IID) client data, we modified the local training loop using the FedProx algorithm.
 * **Mechanism:** Clients add a Proximal Penalty to their standard loss function. This mathematically anchors the local updates, forcing clients to learn from their local data without straying too far from the global model's state. 
 * **[FedProx](Fedprox.ipynb)**
 
 ---
 
-### Final Project Findings: Data Modality vs. Differential Privacy
+### Findings: Data Modality vs. Differential Privacy
 In all three defense notebooks, after securing the aggregation step, the central server injected statistical noise to mask individual client contributions. We compared standard Gaussian noise against heavy-tailed Laplace noise. 
 
 The experiments yielded conclusive, repeatable evidence across all architectures:
