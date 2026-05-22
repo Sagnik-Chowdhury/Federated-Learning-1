@@ -39,12 +39,12 @@ A core objective of this phase was to test the hypothesis that **data modality d
 #### 1. Task 2: Trimmed Mean (Quantile) Aggregation
 Standard Federated Averaging is highly vulnerable to data poisoning from malicious or skewed clients. To mitigate this, we implemented a Trimmed Mean aggregation strategy at the server level.
 * **Mechanism:** The server sorts all client parameter updates and discards the extreme outliers (the top 5% and bottom 5% of updates). The remaining 90% is averaged to form a safe, robust global model.
-* **Implementation File:**(Fed Trimmed Mean Aggregation.ipynb)
+* **[Implementation File](Fed_Trimmed_Mean_Aggregation.ipynb)**
 
 #### 2. Task 3: Gradient Clipping & DP-SGD
 As an alternative to quantile filtering, we implemented a strict mathematical constraint on client updates, forming a standard Differential Privacy pipeline.
 * **Mechanism:** The central server calculates the magnitude ($L_2$ norm) of each client's proposed update. If the update exceeds a rigid threshold, it is mathematically scaled down. 
-* **Implementation File:**(Fed Gradient Clipping.ipynb)
+* **[Implementation File](Fed_Gradient_Clipping.ipynb)**
 
 #### Key Findings: Data Modality vs. Differential Privacy
 In both notebooks, after securing the aggregation step, the central server injected statistical noise to mask individual client contributions. We compared standard Gaussian noise against heavy-tailed Laplace noise. 
