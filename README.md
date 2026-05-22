@@ -48,20 +48,20 @@ Standard Federated Averaging is highly vulnerable to data poisoning from malicio
 * **Mechanism:** The server sorts all client parameter updates and discards the extreme outliers (the top 5% and bottom 5% of updates). The remaining 90% is averaged to form a safe, robust global model.
   
 
-### 2. Gradient Clipping & DP-SGD
+### 2. [Gradient Clipping & DP-SGD](Fed_Gradient_Clipping.ipynb)
 As an alternative to quantile filtering, we implemented a strict mathematical constraint on client updates, forming a standard Differential Privacy pipeline.
-* **Mechanism:** The central server calculates the magnitude (L2 norm) of each client's proposed update. If the update exceeds a rigid threshold, it is mathematically scaled down. 
-* **[Gradient Clipping](Fed_Gradient_Clipping.ipynb)**
+* **Mechanism:** The central server calculates the magnitude (L2 norm) of each client's proposed update. If the update exceeds a rigid threshold, it is mathematically scaled down.
+  
 
-### 3. Mitigating Client Drift with FedProx
+### 3. [Mitigating Client Drift with FedProx](FedProx.ipynb)
 To address highly heterogeneous (non-IID) client data, we modified the local training loop using the FedProx algorithm.
 * **Mechanism:** Clients add a Proximal Penalty to their standard loss function. This mathematically anchors the local updates, forcing clients to learn from their local data without straying too far from the global model's state. 
-* **[FedProx](FedProx.ipynb)**
 
-### 4. Advanced Drift Correction with SCAFFOLD
+
+### 4. [Advanced Drift Correction with SCAFFOLD](Scaffolding.ipynb)
 To push client drift mitigation to the mathematical limit, we implemented Stochastic Controlled Averaging (SCAFFOLD).
 * **Mechanism:** Instead of a loss penalty, SCAFFOLD uses Control Variates. The server tracks global update trajectories, and clients track local data biases, mathematically correcting their gradients ($g = g - c_i + c$) during the optimization step to maintain alignment with the global objective.
-* **[Scaffolding](Scaffolding.ipynb)**
+  
 
 ---
 
