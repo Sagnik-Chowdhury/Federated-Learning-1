@@ -55,7 +55,7 @@ As an alternative to quantile filtering, we implemented a strict mathematical co
 ### 3. Task 4: Mitigating Client Drift with FedProx
 To address highly heterogeneous (non-IID) client data, we modified the local training loop using the FedProx algorithm.
 * **Mechanism:** Clients add a Proximal Penalty to their standard loss function. This mathematically anchors the local updates, forcing clients to learn from their local data without straying too far from the global model's state. 
-* **[FedProx](FedProx.ipynb)**
+* **[FedProx](Fedprox.ipynb)**
 
 ---
 
