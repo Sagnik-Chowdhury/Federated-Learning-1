@@ -29,7 +29,7 @@ To test how **data modality** impacts privacy, we executed this attack against t
 
 #### Architecture & Methodology
 * **Network Topologies:**
-* *Image Model:* A 4-layer MLP mapping 784 input pixels down to 10 class logits.
+  * *Image Model:* A 4-layer MLP mapping 784 input pixels down to 10 class logits.
   * *Tabular Model:* A 3-layer MLP mapping 30 standardized medical features to 2 diagnosis classes.
 * **Attack Method:** Optimization-based Model Inversion (Activation Maximization). The trained weights of the network are completely frozen on the server side. Pure random noise is fed as a dummy input, and gradient descent is used to optimize the input values to maximize the network's confidence scores for specific target classes.
 
