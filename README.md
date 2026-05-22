@@ -43,10 +43,10 @@ The implementation is split into two sequential Jupyter Notebooks:
 
 Following the successful reconstruction attacks, we shifted focus to implementing and stress-testing industry-standard defense mechanisms, evaluating how our two data modalities responded to advanced privacy filters.
 
-### 1. **[Trimmed Mean (Quantile) Aggregation](Fed_Trimmed_Mean_Aggregation.ipynb)**
+### 1. [Trimmed Mean (Quantile) Aggregation](Fed_Trimmed_Mean_Aggregation.ipynb)
 Standard Federated Averaging is highly vulnerable to data poisoning from malicious or skewed clients. To mitigate this, we implemented a Trimmed Mean aggregation strategy at the server level.
 * **Mechanism:** The server sorts all client parameter updates and discards the extreme outliers (the top 5% and bottom 5% of updates). The remaining 90% is averaged to form a safe, robust global model.
-* **[Trimmed Mean Aggregation](Fed_Trimmed_Mean_Aggregation.ipynb)**
+  
 
 ### 2. Gradient Clipping & DP-SGD
 As an alternative to quantile filtering, we implemented a strict mathematical constraint on client updates, forming a standard Differential Privacy pipeline.
