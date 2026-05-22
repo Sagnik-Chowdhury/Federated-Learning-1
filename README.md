@@ -53,7 +53,7 @@ As an alternative to quantile filtering, we implemented a strict mathematical co
 * **Mechanism:** The central server calculates the magnitude (L2 norm) of each client's proposed update. If the update exceeds a rigid threshold, it is mathematically scaled down.
   
 
-### 3. [Mitigating Client Drift with FedProx](FedProx.ipynb)
+### 3. [Mitigating Client Drift with FedProx](Fedprox.ipynb)
 To address highly heterogeneous (non-IID) client data, we modified the local training loop using the FedProx algorithm.
 * **Mechanism:** Clients add a Proximal Penalty to their standard loss function. This mathematically anchors the local updates, forcing clients to learn from their local data without straying too far from the global model's state. 
 
