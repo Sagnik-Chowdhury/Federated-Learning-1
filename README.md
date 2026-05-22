@@ -17,7 +17,9 @@ Our complete, synthesized understanding of the paper's core concepts, challenges
 
 Following our collaborative literature review on Federated Learning architectures, we branched into individual practical experiments to stress-test the framework's privacy guarantees. 
 
-### Sagnik's Experiment: Federated Learning with Standard and Delta Weight Aggregation
+### Sagnik's Experiment: 
+
+### 1. Federated Learning with Standard and Delta Weight Aggregation
 
 This experiment explores Federated Learning on the CIFAR-100 dataset using two different communication strategies: traditional weight sharing and Delta Weight sharing. The objective is to analyze how model aggregation methods affect collaborative learning performance under Non-IID client distributions.
 
@@ -50,4 +52,27 @@ This reduces redundant communication and focuses only on the learned parameter c
 The implementation is divided into two Jupyter Notebooks:
 
 1. - [Standard Federated Learning](FL_CIFAR_100_ResNet_18.ipynb): Implements standard Federated Learning using full model weight aggregation with FedAvg on the CIFAR-100 dataset.
-2. - [Delta Weight Federated Learning](FL_CIFAR_100_ResNet_18_Delta.ipynb): Implements Federated Learning using Delta Weight aggregation, where clients communicate only parameter updates instead of complete model weights.  
+2. - [Delta Weight Federated Learning](FL_CIFAR_100_ResNet_18_Delta.ipynb): Implements Federated Learning using Delta Weight aggregation, where clients communicate only parameter updates instead of complete model weights.
+  
+## 2.  Dirichlet-Based Non-IID Federated Learning
+
+[Dirichlet](FL_CIFAR_100_ResNet_18_Dirichlet.ipynb) :   Implemented a Federated Learning framework using ResNet-18 on the CIFAR-100 dataset with Dirichlet-based Non-IID client data partitioning. The project simulates realistic heterogeneous client distributions and trains a global model using the FedAvg aggregation algorithm across multiple communication rounds.
+  
+## 3. FedProx-Based Federated Learning
+
+This project implements the FedProx algorithm for federated learning using a ResNet-18 model on the CIFAR-100 dataset under a non-IID Dirichlet data distribution. The experiment simulates decentralized client training where each client trains locally on heterogeneous data while a central server aggregates model updates over multiple communication rounds.
+
+Unlike traditional FedAvg, FedProx introduces a proximal regularization term to reduce client drift and improve optimization stability in heterogeneous federated environments. The project evaluates global model convergence, client-side losses, and overall classification performance across distributed clients.
+
+### Key Features
+- Non-IID Dirichlet data partitioning
+- Federated client-server training architecture
+- FedProx optimization with proximal regularization
+- ResNet-18 based image classification
+- CIFAR-100 dataset support
+- Global accuracy and loss tracking
+
+### Results
+The model achieved a best global accuracy of **22.47%** after 25 communication rounds under heterogeneous client distributions.
+
+[FedProx](FL_CIFAR_100_ResNet_18_FedProx.ipynb) : Implements the FedProx algorithm for Federated Learning on the CIFAR-100 dataset under non-IID Dirichlet data distribution. FedProx introduces a proximal regularization term to reduce client drift and improve training stability in heterogeneous federated environments.
