@@ -61,7 +61,7 @@ To address highly heterogeneous (non-IID) client data, we modified the local tra
 ### 4. Advanced Drift Correction with SCAFFOLD
 To push client drift mitigation to the mathematical limit, we implemented Stochastic Controlled Averaging (SCAFFOLD).
 * **Mechanism:** Instead of a loss penalty, SCAFFOLD uses Control Variates. The server tracks global update trajectories, and clients track local data biases, mathematically correcting their gradients ($g = g - c_i + c$) during the optimization step to maintain alignment with the global objective.
-* **[SCAFFOLD](Scaffolding.ipynb)**
+* **[Scaffolding](Scaffolding.ipynb)**
 
 ---
 
