@@ -52,9 +52,9 @@ This track explores how model aggregation methods affect collaborative learning 
 This track stress-tests the privacy guarantees of FL, proving that standard shared weights act as a mathematical memory of private client data. It then implements state-of-the-art defenses to evaluate the hypothesis that **data modality dictates privacy resilience**. 
 
 **Key Experiments:**
-1. **Model Inversion Attacks:** Executed Activation Maximization attacks to reverse-engineer frozen model weights. We successfully extracted spatial features (ghostly pixels) from an Image Network (MNIST) and archetypal statistical thresholds from a Tabular Network (Breast Cancer).
+1. **[Model Inversion Attacks](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sourit):** Executed Activation Maximization attacks to reverse-engineer frozen model weights. We successfully extracted spatial features (ghostly pixels) from an Image Network (MNIST) and archetypal statistical thresholds from a Tabular Network (Breast Cancer).
 2. **Robust Aggregation Pipelines:** Replaced standard FedAvg with three advanced algorithms to protect the server from data poisoning and client drift:
-   * **Trimmed Mean (Quantile) Aggregation**
-   * **Gradient Clipping (L2 Norm Limits)**
-   * **FedProx & SCAFFOLD (Control Variates & Drift Mitigation)**
+   * **[Trimmed Mean (Quantile) Aggregation](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Fed_Trimmed_Mean_Aggregation.ipynb)**
+   * **[Gradient Clipping (L2 Norm Limits)](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Fed_Gradient_Clipping.ipynb)**
+   * **[FedProx](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Fedprox.ipynb) & [SCAFFOLD](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Scaffolding.ipynb) (Control Variates & Drift Mitigation)**
 3. **Differential Privacy (DP) vs. Modality:** Injected Gaussian and heavy-tailed Laplace noise into the aggregated models. The experiments conclusively proved that dense spatial data (Images) suffers catastrophic utility loss under Laplace noise, whereas scattered/independent data (Tabular features) comfortably absorbs aggressive noise with near-zero accuracy drops (>93% retention).
