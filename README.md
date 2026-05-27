@@ -30,7 +30,7 @@ To keep our parallel experiments organized, this repository is structured across
 We began our project by analyzing the seminal 2017 paper that introduced the Federated Learning framework.
 * **Paper Title:** [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629)
 * **Authors:** H. Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, Blaise Agüera y Arcas
-* **Output:** Our synthesized understanding of core concepts, communication challenges, and the FedAvg algorithm can be found in our [Literature Summary](lit-study-summary.md).
+* **Output:** Our synthesized understanding of core concepts, communication challenges, and the FedAvg algorithm can be found in our [Literature Summary](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/lit-study/lit-study-summary.md)).
 
 ---
 
