@@ -7,7 +7,7 @@
 This repository encompasses our Algolabs internship project on Federated Learning (FL). The primary objective of this project was to fundamentally understand decentralized machine learning architectures, and then push the boundaries of the framework through practical experimentation. 
 
 The project was executed in two main phases:
-1. **Collaborative Foundation:** A joint literature study to understand the core mechanics and mathematics of standard Federated Averaging (FedAvg).
+1. **Collaborative Foundation:** A joint literature study to understand the core mechanics and mathematics of standard [Federated Averaging (FedAvg)](https://arxiv.org/abs/1602.05629).
 2. **Parallel Research Tracks:** We split into individual branches to tackle two of the biggest challenges in modern FL:
    * **Optimization & Heterogeneity (Sagnik):** Improving communication efficiency and model convergence when client data is highly Non-IID (unbalanced).
    * **Security & Robust Aggregation (Sourit):** Exposing model vulnerabilities (Inversion Attacks) and building robust, modality-aware privacy pipelines.
