@@ -42,9 +42,9 @@ We began our project by analyzing the seminal 2017 paper that introduced the Fed
 This track explores how model aggregation methods affect collaborative learning performance under highly heterogeneous (Non-IID) client distributions using a ResNet-18 CNN on the CIFAR-100 dataset.
 
 **Key Experiments:**
-1. **Standard vs. Delta Weight Aggregation:** Compared traditional full-weight sharing against a Delta strategy ($\Delta w = w_{local} - w_{global}$), drastically reducing redundant communication payloads by transmitting only the learned parameter changes.
-2. **Dirichlet-Based Non-IID Partitioning:** Simulated realistic, heterogeneous client environments by partitioning the CIFAR-100 dataset using a Dirichlet distribution, heavily skewing the data available to local edge devices.
-3. **FedProx Optimization:** Implemented the FedProx algorithm to combat the "client drift" caused by the Dirichlet partitioning. By introducing a proximal regularization term, the framework successfully stabilized optimization and achieved a best global accuracy of 22.47% after 25 communication rounds on the complex CIFAR-100 dataset.
+1. **[Standard](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18.ipynb) vs. [Delta Weight Aggregation](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18_Delta%20.ipynb):** Compared traditional full-weight sharing against a Delta strategy ($\Delta w = w_{local} - w_{global}$), drastically reducing redundant communication payloads by transmitting only the learned parameter changes.
+2. **[Dirichlet-Based Non-IID Partitioning](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18_Dirichlet.ipynb):** Simulated realistic, heterogeneous client environments by partitioning the CIFAR-100 dataset using a Dirichlet distribution, heavily skewing the data available to local edge devices.
+3. **[FedProx Optimization](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18_FedProx.ipynb):** Implemented the FedProx algorithm to combat the "client drift" caused by the Dirichlet partitioning. By introducing a proximal regularization term, the framework successfully stabilized optimization and achieved a best global accuracy of 22.47% after 25 communication rounds on the complex CIFAR-100 dataset.
 
 ### Track B: Privacy Vulnerabilities & Robust Defenses (Sourit's Branch)
 *(Please switch to the `sourit` branch for full implementations)*
