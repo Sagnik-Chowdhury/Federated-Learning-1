@@ -25,7 +25,7 @@ To keep our parallel experiments organized, this repository is structured across
 ---
 
 ## Phase 1: Collaborative Literature Study
-*(Located in the `lit-study` branch)*
+*(Located in the [`lit-study`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/lit-study) branch)*
 
 We began our project by analyzing the seminal 2017 paper that introduced the Federated Learning framework.
 * **Paper Title:** [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629)
