@@ -19,8 +19,8 @@ To keep our parallel experiments organized, this repository is structured across
 
 * 🌿 `main` *(You are here)*: Project overview and directory.
 * 🌿 `lit-study`: Contains our collaborative notes and technical summary of the foundational FL paper.
-* 🌿 `sagnik`: Contains experiments on communication efficiency, Dirichlet distributions, and FedProx using ResNet-18 on CIFAR-100.
-* 🌿 `sourit`: Contains experiments on Model Inversion attacks and Defensive Aggregation (DP, Trimmed Mean, Clipping, SCAFFOLD) across varying data modalities.
+* 🌿 `Sagnik`: Contains experiments on communication efficiency, Dirichlet distributions, and FedProx using ResNet-18 on CIFAR-100.
+* 🌿 `Sourit`: Contains experiments on Model Inversion attacks and Defensive Aggregation (DP, Trimmed Mean, Clipping, SCAFFOLD) across varying data modalities.
 
 ---
 
@@ -37,7 +37,7 @@ We began our project by analyzing the seminal 2017 paper that introduced the Fed
 ## Phase 2: Individual Research Tracks
 
 ### Track A: Optimization & Non-IID Distributions (Sagnik's Branch)
-*(Please switch to the `sagnik` branch for full implementations)*
+*(Please switch to the [`Sagnik`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sagnik) branch for full implementations)*
 
 This track explores how model aggregation methods affect collaborative learning performance under highly heterogeneous (Non-IID) client distributions using a ResNet-18 CNN on the CIFAR-100 dataset.
 
@@ -47,7 +47,7 @@ This track explores how model aggregation methods affect collaborative learning 
 3. **[FedProx Optimization](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18_FedProx.ipynb):** Implemented the FedProx algorithm to combat the "client drift" caused by the Dirichlet partitioning. By introducing a proximal regularization term, the framework successfully stabilized optimization and achieved a best global accuracy of 22.47% after 25 communication rounds on the complex CIFAR-100 dataset.
 
 ### Track B: Privacy Vulnerabilities & Robust Defenses (Sourit's Branch)
-*(Please switch to the `sourit` branch for full implementations)*
+*(Please switch to the [`Sourit`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sourit) branch for full implementations)*
 
 This track stress-tests the privacy guarantees of FL, proving that standard shared weights act as a mathematical memory of private client data. It then implements state-of-the-art defenses to evaluate the hypothesis that **data modality dictates privacy resilience**. 
 
