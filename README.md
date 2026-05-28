@@ -18,14 +18,14 @@ The project was executed in two main phases:
 To keep our parallel experiments organized, this repository is structured across distinct branches. Please switch to the respective branches to view the full code, datasets, and detailed methodologies.
 
 * 🌿 `main` *(You are here)*: Project overview and directory.
-* 🌿 `lit-study`: Contains our collaborative notes and technical summary of the foundational FL paper.
-* 🌿 `Sagnik`: Contains experiments on communication efficiency, Dirichlet distributions, and FedProx using ResNet-18 on CIFAR-100.
-* 🌿 `Sourit`: Contains experiments on Model Inversion attacks and Defensive Aggregation (DP, Trimmed Mean, Clipping, SCAFFOLD) across varying data modalities.
+* 🌿 [`lit-study`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/lit-study): Contains our collaborative notes and technical summary of the foundational FL paper.
+* 🌿 [`Sagnik`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sagnik): Contains experiments on communication efficiency, Dirichlet distributions, and FedProx using ResNet-18 on CIFAR-100.
+* 🌿 [`Sourit`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sourit): Contains experiments on Model Inversion attacks and Defensive Aggregation (DP, Trimmed Mean, Clipping, SCAFFOLD) across varying data modalities.
 
 ---
 
 ## Phase 1: Collaborative Literature Study
-*(Located in the [`lit-study`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/lit-study) branch)*
+*(Located in the c branch)*
 
 We began our project by analyzing the seminal 2017 paper that introduced the Federated Learning framework.
 * **Paper Title:** [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629)
