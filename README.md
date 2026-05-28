@@ -12,7 +12,7 @@ This repository contains our collaborative literature study and technical summar
 
 ## Study Notes
 Our complete, synthesized understanding of the paper's core concepts, challenges, and the FederatedAveraging (FedAvg) algorithm can be found in our study document:
-* [Read the Literature Summary Here](lit-study-summary.md)
+* [Read the Literature Summary Here](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/lit-study/lit-study-summary.md)
 
 ---
 
