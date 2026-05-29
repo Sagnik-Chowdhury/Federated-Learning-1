@@ -1,6 +1,6 @@
 # Federated Learning: Literature Study & Security Analysis
 
-**Authors:** Sourit Mitra (MDS202537), Sagnik Chowdhury
+**Authors:** Sourit Mitra, Sagnik Chowdhury
 
 ## Project Overview
 This repository contains our collaborative literature study and technical summary of the seminal paper on decentralized machine learning architectures. This review and subsequent vulnerability research was conducted as part of our project work at Algolabs. 
