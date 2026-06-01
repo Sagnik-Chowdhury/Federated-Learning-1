@@ -15,8 +15,8 @@ Following the literature review, we expanded our scope to include **practical, e
 
 **1. Theoretical Foundation**
 Our complete, synthesized understanding of the paper's core concepts, challenges, and the FederatedAveraging (FedAvg) algorithm can be found in our study document:
-* 📖 [Read the Literature Summary Here](lit-study-summary.md)
+*  [Read the Literature Summary Here](lit-study-summary.md)
 
 **2. Empirical Experiments**
 Our practical testing results, benchmarking 5 different aggregation strategies (FedAvg, Trimmed Mean, Gradient Clipping, FedProx, SCAFFOLD) across diverse data modalities and adversarial network setups:
-* 📊 [Read the Empirical Study Results Here](empirical-study-results.md)
+*  [Read the Empirical Study Results Here](empirical-study-results.md)
