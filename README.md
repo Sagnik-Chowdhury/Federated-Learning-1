@@ -1,75 +1,97 @@
-# Federated Learning: Literature Study & Security Analysis
+# Federated Learning: Privacy Attacks & Modality‑Aware Robust Aggregation
 
-**Authors:** Sourit Mitra, Sagnik Chowdhury
+**Author:** Sourit Mitra  
+**Branch:** `Sourit`
 
-## Project Overview
-This repository contains our collaborative literature study and technical summary of the seminal paper on decentralized machine learning architectures. This review and subsequent vulnerability research was conducted as part of our project work at Algolabs. 
+This branch contains my individual research on **security vulnerabilities and robust aggregation strategies** in Federated Learning. The work is divided into two major thrusts:
 
-## Source Material
-* **Paper Title:** [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629)
-* **Authors:** H. Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, Blaise Agüera y Arcas 
+1. **Model Inversion Attacks** – demonstrating that shared model weights leak private client data.
+2. **Defensive Aggregation** – implementing and stress‑testing five algorithms against noise, data skew, and poisoning, with a focus on how **data modality** (dense images vs scattered tabular features) affects resilience.
 
-## Study Notes
-Our complete, synthesized understanding of the paper's core concepts, challenges, and the FederatedAveraging (FedAvg) algorithm can be found in our study document:
-* [Read the Literature Summary Here](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/lit-study/lit-study-summary.md)
+All experiments are fully reproducible. Each notebook contains the complete pipeline: data loading, client partitioning, federated rounds, aggregation, and evaluation.
 
 ---
 
-## Individual Research & Vulnerability Experiments
+## Repository Contents
 
-Following our collaborative literature review, we branched into practical experiments to stress-test the framework's privacy guarantees. 
-
-### Model Inversion across Data Modalities
-This experiment demonstrates a major vulnerability in standard Federated Learning: because shared model weights act as a mathematical memory of the client data, an adversary can reverse-engineer those weights to reconstruct properties of the private training set. 
-
-To test how **data modality** impacts privacy, we executed this attack against two distinct data structures:
-1. **Integrated/Dense Data:** High-dimensional images (MNIST).
-2. **Scattered/Tabular Data:** Low-dimensional, continuous features (Breast Cancer Dataset).
-
-#### Architecture & Methodology
-* **Network Topologies:**
-  * *Image Model:* A 4-layer MLP mapping 784 input pixels down to 10 class logits.
-  * *Tabular Model:* A 3-layer MLP mapping 30 standardized medical features to 2 diagnosis classes.
-* **Attack Method:** Optimization-based Model Inversion (Activation Maximization). The trained weights of the network are completely frozen on the server side. Pure random noise is fed as a dummy input, and gradient descent is used to optimize the input values to maximize the network's confidence scores for specific target classes.
-
-#### Implementation Files
-The implementation is split into two sequential Jupyter Notebooks:
-1. **[Internship_Fed_1.ipynb](Internship_Fed_1.ipynb):** Handles the pipeline setup, local training for both datasets, and serialization of the resulting client weights (`fedavg_mnist_weights.pth` and `fedavg_tabular_weights.pth`).
-2. **[Internship_Fed_2.ipynb](Internship_Fed_2.ipynb):** Loads the frozen target architectures and saved weights, executing the inversion loop. It dynamically visualizes the ghostly reconstructed pixels for the MNIST dataset, and generates archetypal feature-importance bar charts for the tabular dataset.
+| Notebook | Description | Key Results |
+|----------|-------------|-------------|
+| `Fed_Model_Inversion_MNIST_Tabular.ipynb` | Activation Maximisation attack on frozen FL models. Reconstructs private inputs from shared weights. | Successfully extracted ghostly MNIST digits and archetypal breast cancer features. |
+| `Fed_Trimmed_Mean_Aggregation.ipynb` | Trimmed Mean (discard top/bottom 10% of updates) with Gaussian/Laplace noise. | Tabular data retains 96% accuracy under Laplace; MNIST drops to 59%. |
+| `Fed_Gradient_Clipping.ipynb` | Fixed 80th‑percentile threshold clipping (first round) + noise injection. | MNIST with Laplace → 10.6%; Tabular with Laplace → 94.7%. |
+| `Fedprox.ipynb` | FedProx (μ=0.01) with proximal penalty + noise. | MNIST noise‑recovery oscillates; tabular stays near 96%. |
+| `Scaffolding.ipynb` | SCAFFOLD control variates + noise. | Collapses on MNIST (26% even without noise); weak on tabular (62%). |
+| `IID_Experiment_CIFAR10.ipynb` | Benchmarks all 5 strategies on IID CIFAR‑10 (25 rounds). | FedAvg best (70.4%), others within 1‑4%. |
+| `NonIID_Experiment_CIFAR10.ipynb` | Dirichlet partitions (α=0.05,0.15,0.25,0.35,0.45). 25 rounds. | Gradient clipping outperforms FedAvg at α=0.05 (51.6% vs 47.4%); SCAFFOLD diverges. |
+| `Data_Poisoning_Label_Flipping.ipynb` | 2/10 malicious clients flip labels (+5 mod 10). 10 rounds. | All methods drop to ~55%; Trimmed Mean and FedProx give marginal +1%. |
 
 ---
 
-## Robust Aggregation & Differential Privacy (DP) Defenses
+## Key Experimental Findings
 
-Following the successful reconstruction attacks, we shifted focus to implementing and stress-testing industry-standard defense mechanisms, evaluating how our two data modalities responded to advanced privacy filters.
+### 1. Model Inversion Attack
+- **Attack success:** By optimising random noise against a frozen model, the adversary can reconstruct visual patterns (MNIST) and statistical thresholds (Breast Cancer).
+- **Implication:** Standard FedAvg without defences leaks private information. Defences (clipping, noise) are necessary.
 
-### 1. [Trimmed Mean (Quantile) Aggregation](Trimmed_Mean.ipynb)
-Standard Federated Averaging is highly vulnerable to data poisoning from malicious or skewed clients. To mitigate this, we implemented a Trimmed Mean aggregation strategy at the server level.
-* **Mechanism:** The server sorts all client parameter updates and discards the extreme outliers (the top 5% and bottom 5% of updates). The remaining 90% is averaged to form a safe, robust global model.
-  
+### 2. Statistical Noise & Data Modality
+| Strategy | Dataset | No Noise | Gaussian | Laplace |
+|----------|---------|----------|----------|---------|
+| FedAvg | MNIST | 94.6% | 86.9% | 66.7% |
+| FedAvg | Tabular | 99.1% | 98.2% | 96.5% |
+| Gradient Clipping | MNIST | 92.2% | 30.8% | 10.6% |
+| Gradient Clipping | Tabular | 95.6% | 93.0% | 94.7% |
+| Trimmed Mean | MNIST | 92.4% | 80.9% | 59.0% |
+| Trimmed Mean | Tabular | 96.5% | 96.5% | 94.7% |
+| FedProx | MNIST | 92.5% | 77.4% | 25.9% |
+| FedProx | Tabular | 97.4% | 96.5% | 96.5% |
+| SCAFFOLD | MNIST | 26.2% | 7.8% | 6.5% |
+| SCAFFOLD | Tabular | 62.3% | 63.2% | 66.7% |
 
-### 2. [Gradient Clipping](Gradient_Clipping.ipynb)
-As an alternative to quantile filtering, we implemented a strict mathematical constraint on client updates, forming a standard Differential Privacy pipeline.
-* **Mechanism:** The central server calculates the magnitude (L2 norm) of each client's proposed update. If the update exceeds a rigid threshold, it is mathematically scaled down.
-  
+**Conclusion:** Dense image data is extremely fragile under heavy‑tailed (Laplace) noise. Tabular data is remarkably robust. No defence fixes this – modality is the dominant factor.
 
-### 3. [Mitigating Client Drift with FedProx](Fedprox.ipynb)
-To address highly heterogeneous (non-IID) client data, we modified the local training loop using the FedProx algorithm.
-* **Mechanism:** Clients add a Proximal Penalty to their standard loss function. This mathematically anchors the local updates, forcing clients to learn from their local data without straying too far from the global model's state. 
+### 3. IID Baseline (CIFAR‑10, 10 clients, 25 rounds)
+| Strategy | Final Accuracy |
+|----------|----------------|
+| FedAvg | 70.4% |
+| Trimmed Mean | 69.8% |
+| Gradient Clipping | 67.9% |
+| FedProx | 66.4% |
+| SCAFFOLD | 69.3% |
 
+**Conclusion:** FedAvg is optimal in IID settings. Others are close but not better.
 
-### 4. [Advanced Drift Correction with SCAFFOLD](Scaffolding.ipynb)
-To push client drift mitigation to the mathematical limit, we implemented Stochastic Controlled Averaging (SCAFFOLD).
-* **Mechanism:** Instead of a loss penalty, SCAFFOLD uses Control Variates. The server tracks global update trajectories, and clients track local data biases, mathematically correcting their gradients ($g = g - c_i + c$) during the optimization step to maintain alignment with the global objective.
-  
+### 4. Non‑IID Skew (Dirichlet α)
+- **Gradient Clipping with fixed 80th‑percentile threshold** outperforms FedAvg at α=0.05 (51.6% vs 47.4%).
+- **SCAFFOLD collapses** at α ≤ 0.15 (accuracy → 10%, loss → NaN).
+- As α increases, all converge toward IID performance.
+
+### 5. Label Flipping Attack (20% malicious)
+| Strategy | Final Accuracy |
+|----------|----------------|
+| FedAvg | 54.2% |
+| Trimmed Mean | 55.5% |
+| Gradient Clipping | 54.1% |
+| FedProx | 55.3% |
+| SCAFFOLD | 51.6% |
+
+**Conclusion:** All methods drop ~15% from clean IID. Trimmed Mean and FedProx offer marginal gains (+1%). SCAFFOLD is worst.
 
 ---
 
-### Final Project Findings: Data Modality vs. Differential Privacy
-In all four defense notebooks, after securing the aggregation step, the central server injected statistical noise to mask individual client contributions. We compared standard Gaussian noise against heavy-tailed Laplace noise. 
+## Practical Recommendations
 
-The experiments yielded conclusive, repeatable evidence across all architectures:
-1. **Integrated Data is Fragile:** Dense image networks (MNIST) suffered catastrophic forgetting under heavy-tailed noise. Across all defense strategies, injecting Laplace noise plummeted the image model's accuracy to unusable levels.
-2. **Scattered Data is Robust:** The tabular networks (Breast Cancer features) showed incredible resilience. They comfortably absorbed aggressive Laplace noise, maintaining exceptional accuracy and stability throughout the testing phases.
+1. **For privacy noise on dense data:** Use only very small Gaussian noise. Avoid Laplace.
+2. **For tabular data:** You can add aggressive noise (even Laplace) with minimal utility loss.
+3. **For extreme non‑IID:** Use **Gradient Clipping with a fixed 80th‑percentile threshold** (computed from the first round). It is simple and outperforms more complex methods.
+4. **Do NOT use SCAFFOLD** in highly heterogeneous or untrusted environments.
+5. **Label flipping is hard to defeat** with these methods. Consider stronger Byzantine defenses (Krum, Bulyan) if poisoning is a major threat.
 
-**Conclusion:** Robust aggregation (Trimmed Mean, Clipping, FedProx, SCAFFOLD) effectively protects against data poisoning and client drift. However, statistical privacy mechanisms must be uniquely tailored to the data's underlying structure. Dense spatial data cannot survive Laplace distributions, whereas scattered tabular data requires it for true differential privacy without utility loss.
+---
+
+## How to Run
+
+1. Clone the repository and switch to the `Sourit` branch:
+   ```bash
+   git clone https://github.com/Sagnik-Chowdhury/Federated-Learning-1.git
+   cd Federated-Learning-1
+   git checkout Sourit
