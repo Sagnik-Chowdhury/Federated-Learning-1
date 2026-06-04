@@ -48,7 +48,7 @@ Standard Federated Averaging is highly vulnerable to data poisoning from malicio
 * **Mechanism:** The server sorts all client parameter updates and discards the extreme outliers (the top 5% and bottom 5% of updates). The remaining 90% is averaged to form a safe, robust global model.
   
 
-### 2. [Gradient Clipping & DP-SGD](Gradient_Clipping.ipynb)
+### 2. [Gradient Clipping](Gradient_Clipping.ipynb)
 As an alternative to quantile filtering, we implemented a strict mathematical constraint on client updates, forming a standard Differential Privacy pipeline.
 * **Mechanism:** The central server calculates the magnitude (L2 norm) of each client's proposed update. If the update exceeds a rigid threshold, it is mathematically scaled down.
   
