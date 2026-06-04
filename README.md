@@ -53,19 +53,66 @@ This track explores how model aggregation methods affect collaborative learning 
 ### Track B: Privacy Vulnerabilities & Robust Defenses (Sourit's Branch)
 *(Please switch to the [`Sourit`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sourit) branch for full implementations)*
 
-This branch contains my complete experimental work on attacking and defending Federated Learning systems. The full details, including all results and analysis, are documented in the [Sourit Branch README](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/README.md).
+This track covers two main themes: **exposing vulnerabilities** (Model Inversion) and **building defenses** (Trimmed Mean, Gradient Clipping, FedProx, SCAFFOLD) tested under noise, non‑IID, and poisoning.
 
-**Highlights:**
-- **Model Inversion Attacks** – reconstructing private training data from shared weights.
-- **Five robust aggregation strategies** tested under noise, non‑IID skew, and label flipping.
-- **Key discovery:** Dense image data is highly fragile under Laplace noise; tabular data remains robust.
+#### Model Inversion Attack (Two‑notebook pipeline)
+
+- **[`Model Construction`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Model_Construction.ipynb))** 
+  Constructs two neural networks: a 4‑layer MLP for MNIST (784→256→128→64→10) and a 3‑layer MLP with dropout for the Breast Cancer dataset (30→16→8→2). Trains them in a federated setting (20 clients, IID split) and saves the resulting weights.
+
+- **[`Model Inversion`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Model_Inversion.ipynb)**  
+  Loads the frozen weights and performs **Activation Maximisation** (optimising random noise to maximise the network’s confidence for a target class). Successfully reconstructs ghostly digit images from MNIST and archetypal feature importance charts for Breast Cancer, proving that shared weights leak private information.
+
+#### Robust Aggregation Defenses
+
+All defense notebooks run on both MNIST and Breast Cancer, with and without server‑side noise (Gaussian / Laplace).
+
+1. **[`FedAvg`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/FedAvg.ipynb)**  
+   Standard weighted averaging of client models. Used as the baseline for all experiments.
+   *Result:* Dense image data suffers a large drop under Laplace noise, while tabular data remains almost unaffected – establishing the modality bias that persists across all defenses.
+
+1. **[`Trimmed Mean`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Trimmed_Mean.ipynb)**  
+   Discards top and bottom 10% of client parameter updates per coordinate before averaging.  
+   *Result:* Protects tabular data well; dense data still fragile under Laplace noise.
+
+2. **[`Gradient Clipping`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Gradient_Clipping.ipynb)**  
+   Introduces a **fixed clipping threshold** derived from the **80th percentile** of client weight L2 norms in the **first round**. Reuses the same threshold for all future rounds.  
+   *Result:* Extremely effective under severe non‑IID (outperforms FedAvg at α=0.05), but does not protect dense data from Laplace noise.
+
+3. **[`Fedprox`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Fedprox.ipynb)**  
+   Adds a proximal penalty (μ = 0.01) to local training.  
+   *Result:* Helps recover from Gaussian noise on MNIST (77% vs 86% baseline) but unstable under Laplace.
+
+4. **[`Scaffolding`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Scaffolding.ipynb)**  
+   Implements control variates for drift correction.  
+   *Result:* Fails on dense MNIST (26% even without noise) and diverges under extreme non‑IID. Not recommended for heterogeneous settings.
+
+#### [`IID Experiment`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/IID_FL.ipynb)
+
+Benchmarks all five strategies on CIFAR‑10 with **perfect IID split** (10 clients, 25 rounds).  
+- FedAvg reaches 70.4% accuracy; others are within 1‑4% lower.  
+Establishes the ideal ceiling for each method.
+
+#### [`Non-IID Experiment`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Non_IID_FL.ipynb)
+
+Partitions CIFAR‑10 with Dirichlet α = 0.05, 0.15, 0.25, 0.35, 0.45 (α smaller = more skew). Runs 25 rounds for all five strategies.  
+- **Gradient Clipping (fixed 80th percentile) beats FedAvg** at α=0.05: 51.6% vs 47.4%.  
+- SCAFFOLD collapses (accuracy → 10%, loss NaN) at α ≤ 0.15.  
+- As α increases, all methods converge toward the IID baseline.
+
+#### [`Data Poisoning`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Byzantine_Robustness.ipynb)
+
+Simulates a Byzantine attack: 2 out of 10 clients flip labels (`new_label = (original_label + 5) % 10`) for every batch. Runs 10 rounds with IID data (to isolate poisoning effect).  
+- All methods drop from ~70% to ~55% accuracy.  
+- Trimmed Mean and FedProx give marginal +1% improvement over FedAvg.  
+- SCAFFOLD performs worst (51.6%).
 
 ---
 
 ## Final Joint Findings
-- **Data modality is the dominant factor** in privacy‑noise robustness. Dense data collapses; tabular data survives.
-- **Gradient Clipping with a fixed 80th‑percentile threshold** (computed from the first round) is simple and effective under extreme non‑IID, outperforming FedAvg at α=0.05.
-- **SCAFFOLD fails** under severe heterogeneity and is not recommended for real‑world deployments.
-- No tested defense fully recovers from label flipping attacks – stronger Byzantine‑robust methods are needed.
 
-For complete code, logs, and visualisations, please explore the respective branches.
+- **Data modality dominates noise resilience:** Dense image data collapses under Laplace noise; tabular data stays robust regardless of defense.
+- **Gradient Clipping with a fixed 80th‑percentile threshold** (first‑round derived) is simple, parameter‑free, and outperforms FedAvg under extreme non‑IID.
+- **SCAFFOLD is not robust** – it fails under heterogeneity and poisoning.
+- **Label flipping** is a hard attack; stronger Byzantine methods (e.g., Krum, Bulyan) are needed for higher compromise rates.
+- **FedAvg remains optimal** in IID and mild non‑IID settings.
