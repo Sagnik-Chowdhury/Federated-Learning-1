@@ -13,7 +13,7 @@ Following the literature review, we expanded our scope to include **practical, e
 
 ## Documentation & Reports
 
-**1. [Theoretical Foundation]((lit-study-summary.md))**
+**1. [Theoretical Foundation](lit-study-summary.md)**
 Our complete, synthesized understanding of the paper's core concepts, challenges, and the FederatedAveraging (FedAvg) algorithm can be found in our study document:
 
 
