@@ -1,7 +1,7 @@
 # Empirical Study: Federated Learning Aggregation Strategies under Data Heterogeneity, Noise, and Poisoning
 
 **Authors:** Sourit Mitra & Sagnik Chowdhury  
-**Date:** June 2026
+
 
 ## 1. Introduction
 
