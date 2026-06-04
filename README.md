@@ -1,12 +1,13 @@
 # Federated Learning: Privacy Attacks & Modality‑Aware Robust Aggregation
 
 
+
 This branch contains my individual research on **security vulnerabilities and robust aggregation strategies** in Federated Learning. The work is divided into two major thrusts:
 
 1. **Model Inversion Attacks** – demonstrating that shared model weights leak private client data.
 2. **Defensive Aggregation** – implementing and stress‑testing five algorithms against noise, data skew, and poisoning, with a focus on how **data modality** (dense images vs scattered tabular features) affects resilience.
 
-All experiments are fully reproducible. Each notebook contains the complete pipeline: data loading, client partitioning, federated rounds, aggregation, and evaluation.
+All experiments are fully reproducible. Each notebook below contains the complete pipeline: data loading, client partitioning, federated rounds, aggregation, and evaluation.
 
 ---
 
@@ -26,122 +27,53 @@ To test how **data modality** impacts privacy, I executed this attack against tw
 #### Architecture & Methodology
 
 - **Network Topologies:**
-  - *Image Model:* A 4-layer MLP mapping 784 input pixels down to 10 class logits.
-  - *Tabular Model:* A 3-layer MLP mapping 30 standardized medical features to 2 diagnosis classes.
+  - *Image Model:* A 4‑layer MLP mapping 784 input pixels down to 10 class logits.
+  - *Tabular Model:* A 3‑layer MLP mapping 30 standardized medical features to 2 diagnosis classes.
 
-- **Attack Method:** Optimization-based Model Inversion (Activation Maximization). The trained weights of the network are completely frozen on the server side. Pure random noise is fed as a dummy input, and gradient descent is used to optimize the input values to maximize the network's confidence scores for specific target classes.
+- **Attack Method:** Optimization‑based Model Inversion (Activation Maximization). The trained weights of the network are completely frozen on the server side. Pure random noise is fed as a dummy input, and gradient descent is used to optimize the input values to maximize the network’s confidence scores for specific target classes.
 
 #### Implementation Files
 
 The implementation is split into two sequential Jupyter Notebooks:
 
-- **[`Model Construction`](Model_construction)** – Handles the pipeline setup, constructs the neural networks for both datasets, performs local training, and serializes the resulting client weights (`fedavg_mnist_weights.pth` and `fedavg_tabular_weights.pth`).
+- **[`Model Construction`](Model_Construction.ipynb)** – Handles the pipeline setup, constructs the neural networks for both datasets, performs local training, and serializes the resulting client weights (`fedavg_mnist_weights.pth` and `fedavg_tabular_weights.pth`).
 - **[`Model Inversion`](Model_Inversion.ipynb)** – Loads the frozen target architectures and saved weights, then executes the inversion loop. It dynamically visualizes the ghostly reconstructed pixels for the MNIST dataset, and generates archetypal feature‑importance bar charts for the tabular dataset.
 
 ---
 
-## Robust Aggregation & Defenses
+## Robust Aggregation & Defenses – Notebook Descriptions
 
-After confirming the inversion vulnerability, I implemented and evaluated five aggregation strategies under three stress conditions: statistical noise, non‑IID data skew, and label‑flipping attacks.
+After confirming the inversion vulnerability, I implemented and evaluated five aggregation strategies under three stress conditions: statistical noise, non‑IID data skew, and label‑flipping attacks. Below is a concise description of what each notebook does.
 
-### 1. Noise Robustness – Dense vs Tabular Data
+### 1. [`Trimmed Mean`](Trimmed_Mean.ipynb)
+This notebook implements the **Trimmed Mean** aggregation rule, which discards the top and bottom 10% of client parameter updates per coordinate before averaging. The goal is to filter out extreme outliers – whether from data poisoning or natural heterogeneity. I tested this defense on both MNIST and Breast Cancer datasets, injecting Gaussian and Laplace noise at the server after aggregation, and measured how well the trimmed mean protected model utility.
 
-**Setup:** 20 clients, IID split, 5 rounds. Server injects Gaussian or Laplace noise (scale = 0.05) after aggregation.
+### 2. `Fed_Gradient_Clipping.ipynb`
+Here I implemented **Gradient Clipping** with a novel twist: the clipping threshold is not tuned manually but derived from the **80th percentile** of client weight L2 norms in the **first federated round**. This fixed threshold is then reused for all subsequent rounds. The notebook clips each client’s entire weight vector to this bound before averaging. I then added Gaussian and Laplace noise to evaluate the combined effect on dense vs tabular data.
 
-#### FedAvg (Baseline)
+### 3. `Fedprox.ipynb`
+This notebook implements **FedProx**, which adds a proximal penalty (`μ = 0.01`) to each client’s local loss. The penalty anchors the local model to the current global model, reducing “client drift” caused by heterogeneous data. I trained clients on both data modalities, with and without server‑side noise injection, to see whether the proximal term helps stabilise learning under statistical noise.
 
-| Dataset | No Noise | Gaussian | Laplace |
-|---------|----------|----------|---------|
-| MNIST   | 94.64%   | 86.89%   | 66.65%  |
-| Tabular | 99.12%   | 98.25%   | 96.49%  |
+### 4. `Scaffolding.ipynb`
+Here I implemented **SCAFFOLD** – a more advanced drift‑correction method that uses control variates at both the server and client sides. During local training, clients modify their gradients using the difference between the global control variate and their local control variate. This notebook runs SCAFFOLD on MNIST and Breast Cancer under the same noise conditions, revealing its sensitivity to both data modality and injected noise.
 
-#### Gradient Clipping (fixed 80th‑percentile threshold)
+### 5. `IID_Experiment_CIFAR10.ipynb`
+This notebook establishes a baseline for all five strategies (FedAvg, Trimmed Mean, Gradient Clipping, FedProx, SCAFFOLD) on CIFAR‑10 under **ideal IID conditions** – each client receives exactly the same number of samples with identical class distribution. I ran 25 communication rounds and recorded final test accuracy to see which strategy performs best when no statistical heterogeneity or poisoning is present.
 
-| Dataset | No Noise | Gaussian | Laplace |
-|---------|----------|----------|---------|
-| MNIST   | 92.15%   | 30.82%   | 10.56%  |
-| Tabular | 95.61%   | 92.98%   | 94.74%  |
+### 6. `NonIID_Experiment_CIFAR10.ipynb`
+To test resilience to **statistical heterogeneity**, I partitioned CIFAR‑10 using a Dirichlet distribution with α values of 0.05, 0.15, 0.25, 0.35, and 0.45. Lower α means more extreme skew (some clients may see only one or two classes). I ran all five strategies for 25 rounds and compared final accuracies across α levels. This notebook revealed which algorithms survive severe non‑IID conditions.
 
-#### Trimmed Mean (trim 10%)
-
-| Dataset | No Noise | Gaussian | Laplace |
-|---------|----------|----------|---------|
-| MNIST   | 92.43%   | 80.94%   | 59.02%  |
-| Tabular | 96.49%   | 96.49%   | 94.74%  |
-
-#### FedProx (μ = 0.01)
-
-| Dataset | No Noise | Gaussian | Laplace |
-|---------|----------|----------|---------|
-| MNIST   | 92.45%   | 77.35%   | 25.94%  |
-| Tabular | 97.37%   | 96.49%   | 96.49%  |
-
-#### SCAFFOLD
-
-| Dataset | No Noise | Gaussian | Laplace |
-|---------|----------|----------|---------|
-| MNIST   | 26.20%   | 7.82%    | 6.49%   |
-| Tabular | 62.28%   | 63.16%   | 66.67%  |
-
-**Conclusion:** Dense image data is extremely fragile under Laplace noise. Tabular data remains robust regardless of noise type.
+### 7. `Data_Poisoning_Label_Flipping.ipynb`
+Finally, I simulated a **Byzantine attack** – label flipping – where two out of ten clients (20% compromise) systematically flip labels during training (`new_label = (original_label + 5) % 10`). The server receives updates from both honest and malicious clients. This notebook runs all five strategies for 10 rounds and measures how much each aggregation rule can mitigate the poisoning effect.
 
 ---
 
-### 2. IID Baseline – CIFAR‑10
+## Key Conclusions from the Experiments
 
-**Setup:** 10 clients, IID split, 25 rounds, CNN model.
-
-| Strategy          | Final Test Accuracy |
-|-------------------|---------------------|
-| FedAvg            | 70.42%              |
-| Trimmed Mean      | 69.75%              |
-| Gradient Clipping | 67.90%              |
-| FedProx           | 66.44%              |
-| SCAFFOLD          | 69.33%              |
-
-FedAvg is optimal in IID settings; others are close but not better.
-
----
-
-### 3. Non‑IID Skew – Dirichlet α
-
-**Setup:** 10 clients, Dirichlet(α) partition, 25 rounds.
-
-| α    | FedAvg | Trimmed | Gradient Clip | FedProx | SCAFFOLD |
-|------|--------|---------|---------------|---------|----------|
-| 0.05 | 47.36% | 46.34%  | 51.59%        | 46.65%  | 10.00% (NaN) |
-| 0.15 | 62.74% | 58.91%  | 61.81%        | 57.13%  | 10.00% (diverged) |
-| 0.25 | 61.44% | 57.82%  | 60.61%        | 56.28%  | 45.12% |
-| 0.35 | 63.17% | 63.18%  | 63.30%        | 60.92%  | 43.65% |
-| 0.45 | 64.83% | 62.87%  | 63.21%        | 62.32%  | 55.45% |
-
-**Key finding:** Gradient Clipping with the fixed 80th‑percentile threshold outperforms FedAvg at α=0.05 (51.6% vs 47.4%). SCAFFOLD collapses at α ≤ 0.15.
-
----
-
-### 4. Label Flipping Attack (20% malicious)
-
-**Setup:** 10 clients, IID split, 2 malicious clients flip labels `label = (label + 5) % 10`, 10 rounds.
-
-| Strategy          | Final Test Accuracy |
-|-------------------|---------------------|
-| FedAvg            | 54.18%              |
-| Trimmed Mean      | 55.49%              |
-| Gradient Clipping | 54.13%              |
-| FedProx           | 55.30%              |
-| SCAFFOLD          | 51.59%              |
-
-All methods drop ~15% from clean IID. Trimmed Mean and FedProx offer marginal (+1%) improvement. SCAFFOLD is worst.
-
----
-
-## Practical Recommendations
-
-- **For privacy noise on dense data:** Use only very small Gaussian noise. Avoid Laplace.
-- **For tabular data:** Aggressive noise (even Laplace) can be added with minimal utility loss.
-- **For extreme non‑IID:** Use **Gradient Clipping with a fixed 80th‑percentile threshold** (computed from the first round). Simple and effective.
-- **Do NOT use SCAFFOLD** in highly heterogeneous or untrusted environments.
-- **For label flipping attacks,** consider stronger Byzantine defenses (e.g., Krum, Bulyan).
+- **Noise vulnerability:** Dense image data (MNIST) collapses under heavy‑tailed Laplace noise regardless of the defense. Tabular data (Breast Cancer) remains highly accurate even with strong noise.
+- **Gradient Clipping with fixed 80th‑percentile threshold:** Performs exceptionally well under extreme non‑IID (α=0.05), outperforming FedAvg. It is simple, requires no per‑round tuning, and is stable.
+- **SCAFFOLD is fragile:** It diverges under severe skew (α ≤ 0.15) and performs poorly even on tabular data. Not recommended for real‑world heterogeneous environments.
+- **Label flipping:** All methods lose about 15% accuracy compared to the clean IID baseline. Trimmed Mean and FedProx offer only marginal gains (~1%). Stronger Byzantine defenses would be needed for higher compromise rates.
 
 ---
 
