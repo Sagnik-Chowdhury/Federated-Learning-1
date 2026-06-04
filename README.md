@@ -76,3 +76,12 @@ Unlike traditional FedAvg, FedProx introduces a proximal regularization term to 
 The model achieved a best global accuracy of **22.47%** after 25 communication rounds under heterogeneous client distributions.
 
 [FedProx](FL_CIFAR_100_ResNet_18_FedProx.ipynb) : Implements the FedProx algorithm for Federated Learning on the CIFAR-100 dataset under non-IID Dirichlet data distribution. FedProx introduces a proximal regularization term to reduce client drift and improve training stability in heterogeneous federated environments.
+
+## 4.  Federated Learning Comparison Experiments
+
+This repository contains federated learning experiments on the CIFAR-10 dataset, comparing multiple aggregation strategies under both IID and Non-IID client data distributions.
+
+* [**IID Federated Learning**](FL_Aggregation_Comparison_IID.ipynb) – Comparative study of FedAvg, FedAvg with Gradient Clipping, FedProx, Trimmed Mean, and SCAFFOLD under an IID data distribution.
+
+* [**Non-IID Federated Learning**](FL_Aggregation_Comparison_Non_IID.ipynb) – Comparative study of FedAvg, FedAvg with Gradient Clipping, FedProx, Trimmed Mean, and SCAFFOLD under a heterogeneous Non-IID data distribution.
+
