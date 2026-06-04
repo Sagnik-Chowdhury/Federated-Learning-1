@@ -57,7 +57,7 @@ This track covers two main themes: **exposing vulnerabilities** (Model Inversion
 
 #### Model Inversion Attack (Two‑notebook pipeline)
 
-- **[`Model Construction`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Model_Construction.ipynb))** 
+- **[`Model Construction`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Model_Construction.ipynb)** 
   Constructs two neural networks: a 4‑layer MLP for MNIST (784→256→128→64→10) and a 3‑layer MLP with dropout for the Breast Cancer dataset (30→16→8→2). Trains them in a federated setting (20 clients, IID split) and saves the resulting weights.
 
 - **[`Model Inversion`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Model_Inversion.ipynb)**  
