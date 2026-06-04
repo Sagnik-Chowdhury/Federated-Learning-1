@@ -168,4 +168,4 @@ All experiments use CNNs / MLPs appropriate for each dataset. The complete code 
 
 ---
 
-*The complete code and raw logs are available in the repository.*
+*The complete code and raw logs are available in the repository [`Sourit`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sourit).*
