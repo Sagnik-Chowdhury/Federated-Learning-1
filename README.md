@@ -35,7 +35,7 @@ To test how **data modality** impacts privacy, I executed this attack against tw
 
 The implementation is split into two sequential Jupyter Notebooks:
 
-- **`[Model Construction](Model_construction)`** – Handles the pipeline setup, constructs the neural networks for both datasets, performs local training, and serializes the resulting client weights (`fedavg_mnist_weights.pth` and `fedavg_tabular_weights.pth`).
+- **[`Model Construction`](Model_construction)** – Handles the pipeline setup, constructs the neural networks for both datasets, performs local training, and serializes the resulting client weights (`fedavg_mnist_weights.pth` and `fedavg_tabular_weights.pth`).
 - **[`Model Inversion`](Model_Inversion.ipynb)** – Loads the frozen target architectures and saved weights, then executes the inversion loop. It dynamically visualizes the ghostly reconstructed pixels for the MNIST dataset, and generates archetypal feature‑importance bar charts for the tabular dataset.
 
 ---
