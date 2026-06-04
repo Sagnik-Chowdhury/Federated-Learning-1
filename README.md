@@ -45,25 +45,28 @@ The implementation is split into two sequential Jupyter Notebooks:
 
 After confirming the inversion vulnerability, I implemented and evaluated five aggregation strategies under three stress conditions: statistical noise, non‑IID data skew, and label‑flipping attacks. Below is a concise description of what each notebook does.
 
-### 1. [`Trimmed Mean`](Trimmed_Mean.ipynb)
+### 1. [`FedAvg`](FedAvg.ipynb)
+Before applying any defensive aggregation, I ran standard FedAvg on both MNIST and Breast Cancer datasets to measure how different data modalities respond to statistical noise injected at the server. I used 20 clients (IID split), 5 rounds, and injected Gaussian and Laplace noise (scale = 0.05) after aggregation. This experiment established that dense image data (MNIST) suffers significant degradation under Laplace noise (66.7% accuracy), while tabular data (Breast Cancer) remains robust (96.5% accuracy). This baseline later served as the reference point for evaluating all defensive strategies.
+
+### 2. [`Trimmed Mean`](Trimmed_Mean.ipynb)
 This notebook implements the **Trimmed Mean** aggregation rule, which discards the top and bottom 10% of client parameter updates per coordinate before averaging. The goal is to filter out extreme outliers – whether from data poisoning or natural heterogeneity. I tested this defense on both MNIST and Breast Cancer datasets, injecting Gaussian and Laplace noise at the server after aggregation, and measured how well the trimmed mean protected model utility.
 
-### 2. `Fed_Gradient_Clipping.ipynb`
+### 3. [`Gradient Clipping`](Gradient_Clipping.ipynb)
 Here I implemented **Gradient Clipping** with a novel twist: the clipping threshold is not tuned manually but derived from the **80th percentile** of client weight L2 norms in the **first federated round**. This fixed threshold is then reused for all subsequent rounds. The notebook clips each client’s entire weight vector to this bound before averaging. I then added Gaussian and Laplace noise to evaluate the combined effect on dense vs tabular data.
 
-### 3. `Fedprox.ipynb`
+### 4. [`Fedprox`](Fedprox.ipynb)
 This notebook implements **FedProx**, which adds a proximal penalty (`μ = 0.01`) to each client’s local loss. The penalty anchors the local model to the current global model, reducing “client drift” caused by heterogeneous data. I trained clients on both data modalities, with and without server‑side noise injection, to see whether the proximal term helps stabilise learning under statistical noise.
 
-### 4. `Scaffolding.ipynb`
+### 5. [`Scaffolding`](Scaffolding.ipynb)
 Here I implemented **SCAFFOLD** – a more advanced drift‑correction method that uses control variates at both the server and client sides. During local training, clients modify their gradients using the difference between the global control variate and their local control variate. This notebook runs SCAFFOLD on MNIST and Breast Cancer under the same noise conditions, revealing its sensitivity to both data modality and injected noise.
 
-### 5. `IID_Experiment_CIFAR10.ipynb`
+### 6. [`IID Experiment`](IID_FL.ipynb)
 This notebook establishes a baseline for all five strategies (FedAvg, Trimmed Mean, Gradient Clipping, FedProx, SCAFFOLD) on CIFAR‑10 under **ideal IID conditions** – each client receives exactly the same number of samples with identical class distribution. I ran 25 communication rounds and recorded final test accuracy to see which strategy performs best when no statistical heterogeneity or poisoning is present.
 
-### 6. `NonIID_Experiment_CIFAR10.ipynb`
+### 7. [`Non-IID Experiment`](Non_IID_FL.ipynb)
 To test resilience to **statistical heterogeneity**, I partitioned CIFAR‑10 using a Dirichlet distribution with α values of 0.05, 0.15, 0.25, 0.35, and 0.45. Lower α means more extreme skew (some clients may see only one or two classes). I ran all five strategies for 25 rounds and compared final accuracies across α levels. This notebook revealed which algorithms survive severe non‑IID conditions.
 
-### 7. `Data_Poisoning_Label_Flipping.ipynb`
+### 8. [`Data Poisoning`](Byzantine_Robustness.ipynb)
 Finally, I simulated a **Byzantine attack** – label flipping – where two out of ten clients (20% compromise) systematically flip labels during training (`new_label = (original_label + 5) % 10`). The server receives updates from both honest and malicious clients. This notebook runs all five strategies for 10 rounds and measures how much each aggregation rule can mitigate the poisoning effect.
 
 ---
@@ -77,10 +80,4 @@ Finally, I simulated a **Byzantine attack** – label flipping – where two out
 
 ---
 
-## How to Run
 
-1. Clone the repository and switch to the `Sourit` branch:
-   ```bash
-   git clone https://github.com/Sagnik-Chowdhury/Federated-Learning-1.git
-   cd Federated-Learning-1
-   git checkout Sourit
