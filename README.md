@@ -1,6 +1,7 @@
 # Federated Learning: Optimization, Security, and Literature Analysis
 
 **Authors:** Sourit Mitra & Sagnik Chowdhury  
+
 ---
 
 ## Project Overview & Primary Objective
@@ -10,7 +11,7 @@ The project was executed in two main phases:
 1. **Collaborative Foundation:** A joint literature study to understand the core mechanics and mathematics of standard [Federated Averaging (FedAvg)](https://arxiv.org/abs/1602.05629).
 2. **Parallel Research Tracks:** We split into individual branches to tackle two of the biggest challenges in modern FL:
    * **Optimization & Heterogeneity (Sagnik):** Improving communication efficiency and model convergence when client data is highly Non-IID (unbalanced).
-   * **Security & Robust Aggregation (Sourit):** Exposing model vulnerabilities (Inversion Attacks) and building robust, modality-aware privacy pipelines.
+   * **Security & Robust Aggregation (Sourit):** Exposing model vulnerabilities (Inversion Attacks) and building robust, modality‑aware aggregation pipelines.
 
 ---
 
@@ -18,19 +19,22 @@ The project was executed in two main phases:
 To keep our parallel experiments organized, this repository is structured across distinct branches. Please switch to the respective branches to view the full code, datasets, and detailed methodologies.
 
 * 🌿 `main` *(You are here)*: Project overview and directory.
-* 🌿 [`lit-study`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/lit-study): Contains our collaborative notes and technical summary of the foundational FL paper.
+* 🌿 [`lit-study`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/lit-study): Contains our **collaborative literature summary** of the foundational FL paper, as well as our **joint empirical study report** that synthesises results from both individual branches.
 * 🌿 [`Sagnik`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sagnik): Contains experiments on communication efficiency, Dirichlet distributions, and FedProx using ResNet-18 on CIFAR-100.
-* 🌿 [`Sourit`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sourit): Contains experiments on Model Inversion attacks and Defensive Aggregation (DP, Trimmed Mean, Clipping, SCAFFOLD) across varying data modalities.
+* 🌿 [`Sourit`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sourit): Contains extensive experiments on Model Inversion attacks, Defensive Aggregation (Trimmed Mean, Gradient Clipping, FedProx, SCAFFOLD), and modality‑aware privacy noise injection.
 
 ---
 
-## Phase 1: Collaborative Literature Study
-*(Located in the c branch)*
+## Phase 1: Collaborative Literature & Empirical Study
+*(Located in the `lit-study` branch)*
 
 We began our project by analyzing the seminal 2017 paper that introduced the Federated Learning framework.
 * **Paper Title:** [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629)
 * **Authors:** H. Brendan McMahan, Eider Moore, Daniel Ramage, Seth Hampson, Blaise Agüera y Arcas
-* **Output:** Our synthesized understanding of core concepts, communication challenges, and the FedAvg algorithm can be found in our [Literature Summary](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/lit-study/lit-study-summary.md).
+* **Literature Output:** Our synthesized understanding of core concepts, communication challenges, and the FedAvg algorithm can be found in our [Literature Summary](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/lit-study/lit-study-summary.md).
+
+After completing our individual experiments, we jointly authored a **comprehensive empirical study report** that compares and contrasts the results from both research tracks. This report is available in the same branch:  
+[**Empirical Study Report**](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/lit-study/empirical-study-results.md)
 
 ---
 
@@ -42,19 +46,26 @@ We began our project by analyzing the seminal 2017 paper that introduced the Fed
 This track explores how model aggregation methods affect collaborative learning performance under highly heterogeneous (Non-IID) client distributions using a ResNet-18 CNN on the CIFAR-100 dataset.
 
 **Key Experiments:**
-1. **[Standard](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18.ipynb) vs. [Delta Weight Aggregation](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18_Delta%20.ipynb):** Compared traditional full-weight sharing against a Delta strategy ($\Delta w = w_{local} - w_{global}$), drastically reducing redundant communication payloads by transmitting only the learned parameter changes.
+1. **[Standard](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18.ipynb) vs. [Delta Weight Aggregation](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18_Delta%20.ipynb):** Compared traditional full-weight sharing against a Delta strategy (Δw = w_local − w_global), drastically reducing redundant communication payloads by transmitting only the learned parameter changes.
 2. **[Dirichlet-Based Non-IID Partitioning](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18_Dirichlet.ipynb):** Simulated realistic, heterogeneous client environments by partitioning the CIFAR-100 dataset using a Dirichlet distribution, heavily skewing the data available to local edge devices.
 3. **[FedProx Optimization](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sagnik/FL_CIFAR_100_ResNet_18_FedProx.ipynb):** Implemented the FedProx algorithm to combat the "client drift" caused by the Dirichlet partitioning. By introducing a proximal regularization term, the framework successfully stabilized optimization and achieved a best global accuracy of 22.47% after 25 communication rounds on the complex CIFAR-100 dataset.
 
 ### Track B: Privacy Vulnerabilities & Robust Defenses (Sourit's Branch)
 *(Please switch to the [`Sourit`](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sourit) branch for full implementations)*
 
-This track stress-tests the privacy guarantees of FL, proving that standard shared weights act as a mathematical memory of private client data. It then implements state-of-the-art defenses to evaluate the hypothesis that **data modality dictates privacy resilience**. 
+This branch contains my complete experimental work on attacking and defending Federated Learning systems. The full details, including all results and analysis, are documented in the [Sourit Branch README](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/README.md).
 
-**Key Experiments:**
-1. **[Model Inversion Attacks](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/tree/Sourit):** Executed Activation Maximization attacks to reverse-engineer frozen model weights. We successfully extracted spatial features (ghostly pixels) from an Image Network (MNIST) and archetypal statistical thresholds from a Tabular Network (Breast Cancer).
-2. **Robust Aggregation Pipelines:** Replaced standard FedAvg with three advanced algorithms to protect the server from data poisoning and client drift:
-   * **[Trimmed Mean (Quantile) Aggregation](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Fed_Trimmed_Mean_Aggregation.ipynb)**
-   * **[Gradient Clipping](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Fed_Gradient_Clipping.ipynb)(L2 Norm Limits)**
-   * **[FedProx](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Fedprox.ipynb) & [SCAFFOLD](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/Sourit/Scaffolding.ipynb) (Control Variates & Drift Mitigation)**
-3. **Differential Privacy (DP) vs. Modality:** Injected Gaussian and heavy-tailed Laplace noise into the aggregated models. The experiments conclusively proved that dense spatial data (Images) suffers catastrophic utility loss under Laplace noise, whereas scattered/independent data (Tabular features) comfortably absorbs aggressive noise with near-zero accuracy drops (>93% retention).
+**Highlights:**
+- **Model Inversion Attacks** – reconstructing private training data from shared weights.
+- **Five robust aggregation strategies** tested under noise, non‑IID skew, and label flipping.
+- **Key discovery:** Dense image data is highly fragile under Laplace noise; tabular data remains robust.
+
+---
+
+## Final Joint Findings
+- **Data modality is the dominant factor** in privacy‑noise robustness. Dense data collapses; tabular data survives.
+- **Gradient Clipping with a fixed 80th‑percentile threshold** (computed from the first round) is simple and effective under extreme non‑IID, outperforming FedAvg at α=0.05.
+- **SCAFFOLD fails** under severe heterogeneity and is not recommended for real‑world deployments.
+- No tested defense fully recovers from label flipping attacks – stronger Byzantine‑robust methods are needed.
+
+For complete code, logs, and visualisations, please explore the respective branches.
