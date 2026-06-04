@@ -17,7 +17,7 @@ Following the literature review, we expanded our scope to include **practical, e
 Our complete, synthesized understanding of the paper's core concepts, challenges, and the FederatedAveraging (FedAvg) algorithm can be found in our study document:
 
 
-**2. [Empirical Experiments]((empirical-study-results.md))**
+**2. [Empirical Experiments](empirical-study-results.md)**
 Our practical testing results, benchmarking 5 different aggregation strategies (FedAvg, Trimmed Mean, Gradient Clipping, FedProx, SCAFFOLD) across diverse data modalities and adversarial network setups:
 
 - **Noise robustness** – dense vs tabular data under Gaussian/Laplace noise.
