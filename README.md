@@ -13,10 +13,15 @@ Following the literature review, we expanded our scope to include **practical, e
 
 ## Documentation & Reports
 
-**1. Theoretical Foundation**
+**1. [Theoretical Foundation]((lit-study-summary.md))**
 Our complete, synthesized understanding of the paper's core concepts, challenges, and the FederatedAveraging (FedAvg) algorithm can be found in our study document:
-*  [Read the Literature Summary Here](lit-study-summary.md)
 
-**2. Empirical Experiments**
+
+**2. [Empirical Experiments]((empirical-study-results.md))**
 Our practical testing results, benchmarking 5 different aggregation strategies (FedAvg, Trimmed Mean, Gradient Clipping, FedProx, SCAFFOLD) across diverse data modalities and adversarial network setups:
-*  [Read the Empirical Study Results Here](empirical-study-results.md)
+
+- **Noise robustness** – dense vs tabular data under Gaussian/Laplace noise.
+- **IID baseline** – CIFAR‑10 with uniform split.
+- **Non‑IID skew** – Dirichlet partitions (α = 0.05 … 0.45).
+- **Data poisoning** – label flipping attack (20% malicious).
+
