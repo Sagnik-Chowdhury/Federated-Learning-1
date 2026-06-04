@@ -12,7 +12,7 @@ All experiments are fully reproducible. Each notebook contains the complete pipe
 
 ## Individual Research & Vulnerability Experiments
 
-Following our collaborative literature review, I branched into practical experiments to stress-test the framework's privacy guarantees.
+Following our collaborative [literature review](https://github.com/Sagnik-Chowdhury/Federated-Learning-1/blob/lit-study/lit-study-summary.md), I branched into practical experiments to stress-test the framework's privacy guarantees.
 
 ### Model Inversion across Data Modalities
 
@@ -35,8 +35,8 @@ To test how **data modality** impacts privacy, I executed this attack against tw
 
 The implementation is split into two sequential Jupyter Notebooks:
 
-- **`Internship_Fed_1.ipynb`** – Handles the pipeline setup, constructs the neural networks for both datasets, performs local training, and serializes the resulting client weights (`fedavg_mnist_weights.pth` and `fedavg_tabular_weights.pth`).
-- **`Internship_Fed_2.ipynb`** – Loads the frozen target architectures and saved weights, then executes the inversion loop. It dynamically visualizes the ghostly reconstructed pixels for the MNIST dataset, and generates archetypal feature‑importance bar charts for the tabular dataset.
+- **`[Model Construction](Model_construction)`** – Handles the pipeline setup, constructs the neural networks for both datasets, performs local training, and serializes the resulting client weights (`fedavg_mnist_weights.pth` and `fedavg_tabular_weights.pth`).
+- **[`Model Inversion`](Model_Inversion.ipynb)** – Loads the frozen target architectures and saved weights, then executes the inversion loop. It dynamically visualizes the ghostly reconstructed pixels for the MNIST dataset, and generates archetypal feature‑importance bar charts for the tabular dataset.
 
 ---
 
